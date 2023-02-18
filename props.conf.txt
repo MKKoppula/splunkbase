@@ -1,0 +1,268 @@
+
+[bmail:event]
+TIME_PREFIX=^
+TIME_FORMAT=%H:%M:%S
+MAX_TIMESTAMP_LOOKAHEAD=10
+LINE_BREAKER=([\r\n]+)\d{2}:\d{2}:\d{2}
+SHOULD_LINEMERGE=false
+TRUNCATE=999999
+disabled=false
+REPORT-bmail-event = REPORT-bmail-event
+EXTRACT-message_id = ^\d\d:\d\d:\d\d\s*(?<message_id>\S*)
+
+[bmail:detail]
+TIME_PREFIX=^
+TIME_FORMAT=%b  %d %H:%M:%S
+MAX_TIMESTAMP_LOOKAHEAD=15
+LINE_BREAKER=([\r\n]+)\w{3}\s+\d{1,2}\s\d{2}:\d{2}:\d{2}
+SHOULD_LINEMERGE=false
+TRUNCATE=999999
+disabled=false
+EXTRACT-message_id = ^[^\|]+\|(?<message_id>[^\|]*)
+REPORT-bmaildetail = REPORT-bmaildetail
+
+[crsv]
+TIME_PREFIX=^
+TIME_FORMAT=%Y-%m-%d %H:%M:%S,%3N
+MAX_TIMESTAMP_LOOKAHEAD=25
+LINE_BREAKER=([\r\n]+)\d{4}-\d{2}-\d{2}
+SHOULD_LINEMERGE=false
+TRUNCATE=999999
+NO_BINARY_CHECK=true
+disabled=false
+DATETIME_CONFIG = 
+NO_BINARY_CHECK = true
+category = Custom
+pulldown_type = true
+EXTRACT-crsv-stats-fast-response = ^(?P<timeStamp>\d+\-\d+\-\d+\s+\d+:\d+:\d+,\d+)[^ \n]* (?P<application>[a-z]+)(?:[^ \n]* ){3}(?P<unknown1>\-\d+)(?:[^ \n]* ){2}(?P<classMethod>\w+\.\w+)\s+(?P<internalTransactionId>[^ ]+)(?:[^ \n]* ){2}(?P<filler1>[^ ]+)\s+type\[(?P<type>[^ ]+)\]\s+applicationId\[(?P<applicationId>[^ ]+)\]\s+softwareVersion\[(?P<softwareVersion>[^ ]+)\]\s+shipperAccountNumber\[(?P<shipperAccountNumber>[^ ]+)\]\s+meterNumber\[(?P<meterNumber>[^ ]+)\]\s+uuid\[(?P<uuid>[^ ]+)?\]\s+actualRateIndicator\[(?P<actualRateIndicator>[^ ]+)\]\s+actualRate.totalBillingWeight.amount\[(?P<actualRateTBWAmount>[^ ]+)\]\s+actualRate.totalBillingWeight.unitOfMeasure\[(?P<actualRateTBWUofM>[^ ]+)\]\s+actualRate.totalFreightDiscount\[(?P<actualRateTotalFreightDiscount>[^ ]+)\]\s+actualRate.totalNetCharge\[(?P<actualRateTotalNetCharge>[^ ]+)\]\s+actualRate.totalNetFreight\[(?P<actualRateTotalNetFreight>[^ ]+)\]\s+actualRate.totalSurcharges\[(?P<actualRateTotalSurcharges>[^ ]+)\]\s+actualRate.rateZone\[(?P<actualRateRateZone>[^ ]+)\]\s+actualRate.fuelPercent\[(?P<actualRateFuelPercent>[^ ]+)\]\s+actualRate.packageRates.count\[(?P<actualRatePackageRatesCount>[^ ]+)\]\s+nbrOfRates\[(?P<nbrOfRates>[^ ]+)\]\s+elapsedTime\[(?P<elapsedTime>[^ ]+)\]\s+Reply-Carrier\[(?P<replyCarrier>[^ ]+)?\]
+EXTRACT-crsv-stats-fast-response2 = ^(?P<timeStamp>\d+\-\d+\-\d+\s+\d+:\d+:\d+,\d+)\s+(?P<application>\w+)\s+(?P<unknown1>\-\d+)\s+(?P<classMethod>[^ ]+)\s+(?P<internalTransactionId>[^ ]+)\s+(?P<filler1>[^ ]+)\s+type\[(?P<type>[^ ]+)\]\s+applicationId\[(?P<applicationId>[^ ]+)\]\s+softwareVersion\[(?P<softwareVersion>[^ ]+)\]\s+shipperAccountNumber\[(?P<shipperAccountNumber>[^ ]+)?\]\s+meterNumber\[(?P<meterNumber>[^ ]+)?\]\s+uuid\[(?P<uuid>[^ ]+)?\]\s+error.code\[(?P<errorCode>[^ ]+)\]error.severity\[(?P<errorSeverity>[^ ]+)\]\s+elapsedTime\[(?P<elapsedTime>[^ ]+)\]\s+Reply-Carrier\[(?P<replyCarrier>[^ ]+)?\]
+EXTRACT-origin_countryCode,destination_countryCode = ^(?:[^\.\n]*\.){2}\w+\[(?P<origin_countryCode>\w+)(?:[^\[\n]*\[){3}(?P<destination_countryCode>\w+)
+EXTRACT-CrsBean,shipperAccountNumber = ^[^\.\n]*\.(?P<CrsBean>\w+)(?:[^\[\n]*\[){9}(?P<shipperAccountNumber>\d+)description = fast-crsv
+REPORT-crsv_by_error_code = REPORT-crsv_by_error_code
+EXTRACT-error_code = ^[^\)\n]*\)'\]\s+\w+\s+\w+\s+(?P<error_code>\d+\s+)
+ 
+[HP-OM]
+TIME_PREFIX=~~\d~~
+TIME_FORMAT=%Y-%m-%d %H:%M:%S
+MAX_TIMESTAMP_LOOKAHEAD=20
+SHOULD_LINEMERGE =false
+LINE_BREAKER=([\r\n]+)\w+~~
+TRUNCATE=999999
+disabled=false
+category = Custom
+pulldown_type = true
+NO_BINARY_CHECK = true
+
+ 
+[fast-cshp-stats]
+TIME_PREFIX=^
+TIME_FORMAT=%Y-%m-%d %H:%M:%S,%3N
+MAX_TIMESTAMP_LOOKAHEAD=25
+LINE_BREAKER=([\r\n]+)\d{4}-\d{2}-\d{2}
+SHOULD_LINEMERGE=false
+TRUNCATE=999999
+disabled=false
+category = Custom
+description = fast-cshp-stats
+pulldown_type = true
+TZ = US/Central
+EXTRACT-status = \]\s\[(?<status>SUCCESS|ERROR|WARNING|NOTE|FAILURE)\]\s
+EXTRACT-service_function = \sship\s+null\s+.*\s\[(?<service>[a-z]+)\]\s\[(?<service_function>[^\]]+)\]\s
+
+
+[fcla_audit_log]
+TIME_PREFIX=^
+TIME_FORMAT=%b %d %H:%M:%S
+MAX_TIMESTAMP_LOOKAHEAD=15
+LINE_BREAKER=([\r\n]+)\w{3}\s+\d{1,2}\s\d{2}:\d{2}:\d{2}
+TRUNCATE=999999
+SHOULD_LINEMERGE=false
+disabled=false
+category = Custom
+description = fcla_audit_log
+pulldown_type = 1
+
+[edm-odc]
+TIME_PREFIX=:\d\.\d\s
+TIME_FORMAT=%Y-%m-%d %H:%M:%S,%3N GMT%z
+MAX_TIMESTAMP_LOOKAHEAD=35
+LINE_BREAKER=([\r\n]+)\/\w+\/\w+
+SHOULD_LINEMERGE=false
+TRUNCATE=999999
+disabled=false
+NO_BINARY_CHECK = true
+category = Custom
+pulldown_type = true
+
+[edm-application]
+TIME_PREFIX=:\d\.\d\s
+TIME_FORMAT=%Y-%m-%d %H:%M:%S,%3N GMT%z
+MAX_TIMESTAMP_LOOKAHEAD=35
+LINE_BREAKER=([\r\n]+)\/\w+\/\w+
+SHOULD_LINEMERGE=false
+TRUNCATE=999999
+disabled=false
+NO_BINARY_CHECK = true
+category = Custom
+pulldown_type = true
+
+[edm-request]
+TIME_PREFIX=:\d\.\d\s
+TIME_FORMAT=%Y-%m-%d %H:%M:%S,%3N GMT%z
+MAX_TIMESTAMP_LOOKAHEAD=35
+LINE_BREAKER=([\r\n]+)\/\w+\/\w+
+SHOULD_LINEMERGE=false
+TRUNCATE=999999
+NO_BINARY_CHECK = true
+category = Custom
+pulldown_type = true
+
+[rating-app]
+TIME_PREFIX=<
+TIME_FORMAT=%b %d, %Y %I:%M:%S %p
+MAX_TIMESTAMP_LOOKAHEAD=25
+LINE_BREAKER=(####)
+SHOULD_LINEMERGE=false
+TRUNCATE=999999
+disabled=false
+NO_BINARY_CHECK = true
+category = Custom
+pulldown_type = true
+EXTRACT-rating-health = ^[^<\n]*<(?P<timeStamp>[^>]+)[^<\n]*<(?P<severity>[^>]+)[^<\n]*<(?P<subSystem>[^>]+)>\s+<(?P<hostName>[^>]+)>\s+<(?P<application>[^>]+)[^ \n]* <(?P<thread>\w+\.\w+)[^ \n]* <<(?P<userId>[a-z]+)>>\s+<>\s+<>\s+<(?P<contextId>[^>]+)>\s+<(?P<msgId>[^>]+)>\s+<(?P<msg>[^>]+)
+EXTRACT-rating-diagnostics = ^(?:[^#\n]*#){4}<(?P<timeStamp>[^>]+)>\s+<(?P<severity>\w+)>\s+<(?P<subSystem>\w+)>\s+<(?P<hostName>\w+\.\w+\.\w+\.\w+)>\s+<(?P<application>[^>]+)>\s+<(?P<appServerFiller>[^>]+)>\s+<<(?P<userId>[^>]+)(?:[^>\n]*>){4}\s+<(?P<threadId>\d+)>\s+<(?P<msgId>\w+\-\d+)>\s+<(?P<msg>[^>]+)
+EXTRACT-rating-jsf = ^(?:[^#\n]*#){4}<(?P<timeStamp>[^>]+)>\s+<(?P<severity>[^>]+)[^>\n]*>\s+<(?P<subSystem>\w+\.\w+\.\w+\.\w+\.\w+\.\w+)[^ \n]* <(?P<hostName>[^>]+)>\s+<(?P<application>[^>]+)[^ \n]* <(?P<appServerFiller>[^>]+)[^ \n]* <(?P<userId>[^>]+)[^ \n]* <>\s+<>\s+<(?P<threadId>[^>]+)[^ \n]* <(?P<msgId>[^>]+)[^ \n]*[^ \n]*[^ \n]* <(?P<msg>[^>]+)
+
+[mainframe]
+TIME_PREFIX=\w+\s\w+\s+\d+\s
+MAX_TIMESTAMP_LOOKAHEAD=15
+TIME_FORMAT=%H:%M:%S.%3N
+LINE_BREAKER=([\r\n]+)\w+\s\w+
+SHOULD_LINEMERGE=false
+disabled=false
+category = Custom
+pulldown_type = true
+EXTRACT-roy:mainframe = ^(?P<zos_rtype>\w+)[^ \n]* (?P<zos_routing_code>\d+)\s+(?P<zos_system_name>\w+)\s+(?P<zos_julian_date>[^ ]+)[^ \n]* (?P<zos_system_time>[^ ]+)\s+(?P<zos_job_id>\w+)\s+(?P<zos_exit_flags>\d+)\s+(?P<zos_message_id>\w+)[^ \n]* (?P<zos_message_text>.+)
+EXTRACT-extract_mainframe = ^(?<record_type>\S{0,2})\s*(?<routing_code>\S{0,8})\s*(?<system_name>\S{0,9})\s*(?<julian_date>\S{0,6})\s*(?<time>\S{0,12})\s*(?<console_job_or_multilin_id>\S{0,9})\s*(?<user_exit_flags>\S{0,10})\s*(?<message_id>\S{0,9})\s*(?<message_text>[\s\S]*)
+
+
+[netcure]
+TIME_PREFIX=",\s+"
+MAX_TIMESTAMP_LOOKAHEAD=20
+TIME_FORMAT=%Y-%m-%d %H:%M:%S
+LINE_BREAKER=([\r\n]+)\d+\,
+SHOULD_LINEMERGE=false
+TRUNCATE=999999
+disabled=false
+category = Custom
+pulldown_type = true
+
+[rating-eDD]
+TIME_PREFIX=\d+\.\d+\s
+TIME_FORMAT=%Y-%m-%d %H:%M:%S,%3N
+LINE_BREAKER=([\r\n]+)\d\.\d\s
+SHOULD_LINEMERGE=false
+TRUNCATE=999999
+disabled=false
+category = Custom
+pulldown_type = true
+
+[last-mile]
+DATETIME_CONFIG = 
+INDEXED_EXTRACTIONS = 
+KV_MODE = json
+NO_BINARY_CHECK = true
+TIMESTAMP_FIELDS = time
+category = Structured
+description = Last mile data
+disabled = false
+pulldown_type = true
+TIME_FORMAT = %Y-%m-%dT%H:%M:%SZ
+TIME_PREFIX = "time":
+
+[fast-crsv-audit]
+TIME_PREFIX=^\d+\.\d+\s
+TIME_FORMAT=%Y-%m-%d %H:%M:%S,%3N GMT%z
+LINE_BREAKER=([\r\n]+)\d+\.\d+\s
+MAX_TIMESTAMP_LOOKAHEAD=35
+TRUNCATE=999999
+SHOULD_LINEMERGE=False
+disabled = false
+pulldown_type = true
+EXTRACT-fast-crsv-audit-ns:request = ^[^ \n]* (?P<Date>\d+\-\d+\-\d+\s+\d+:\d+:\d+,\d+\s+\w+\+\d+)\s+(?P<host>[a-z]+\d+)(?:[^:\n]*:){9}\w+>(?P<transactionContextID>[a-f0-9]+)(?:[^:\n]*:){6}\w+>(?P<transactionTimeStamp>[^<]+)(?:[^:\n]*:){8}\w+>(?P<shipDate>[^<]+)(?:[^>\n]*>){6}(?P<shipperAccountNumber>[^<]+)</\w+:\w+><\w+:\w+>(?P<billToAccountNumber>[^<]+)
+
+[fast-wsgw-trans-xml]
+TIME_PREFIX=^
+TIME_FORMAT=%Y-%m-%d %H:%M:%S,%3N
+MAX_TIMESTAMP_LOOKAHEAD=30
+SHOULD_LINEMERGE=false
+LINE_BREAKER=([\r\n]+)\d{4}-\d{2}-\d{2}
+TRUNCATE=999999
+KV_MODE=xml
+TZ = America/Chicago
+category = Custom
+description = fast-wsgw-trans-xml
+disabled = false
+pulldown_type = 1
+
+[wfcl_audit_log]
+SHOULD_LINEMERGE=false
+TRUNCATE=999999
+LINE_BREAKER=([\r\n]+)\w+\s+\d+\s+\d{2}:\d{2}:\d{2}
+TIME_PREFIX=\.\w+\s+
+TIME_FORMAT=%Y-%m-%d %H:%M:%S,%3N
+MAX_TIMESTAMP_LOOKAHEAD=25
+disabled = false
+pulldown_type = true
+
+[rating-measureware]
+SHOULD_LINEMERGE=false
+TIME_PREFIX=^
+MAX_TIMESTAMPLOOKAHEAD=25
+LINE_BREAKER=(TRAN )\d{2}/\d{2}/\d{4}
+TIME_FORMAT=%m/%d/%Y %H:%M:%S
+TRUNCATE=999999
+disabled = false
+pulldown_type = true
+EXTRACT-rating-measureware = \s*(?<field1>\S+)\s*(?<logDate>\S+)\s*(?<logTime>\S+)\s*(?<field4>\S+)\s*(?<field5>\S+)\s*(?<field6>\S+)\s*(?<field7>\S+)\s*(?<field8>\S+)\s*(?<field9>\S+)\s*(?<metricName>\S+)\s*(?<field11>\S+)\s*(?<field12>\S+)\s*(?<field13>\S+)\s*(?<field14>\S+)\s*(?<count>\S+)\s*(?<field16>\S+)\s*(?<average>\S+)\s*(?<field18>\S+)\s*(?<field19>\S+)\s*(?<field20>\S+)\s*(?<field21>\S+)\s*(?<field22>\S+)\s*(?<aborts>\S+)\s*(?<field24>\S+)\s*(?<field25>\S+)\s*(?<field26>\S+)\s*(?<field27>\S+)\s*(?<field28>\S+)\s*(?<field29>\S+)\s*(?<field30>\S+)\s*(?<field31>\S+)\s*(?<field32>\S+)\s*(?<field33>\S+)\s*(?<field34>\S+)\s*(?<field35>\S+)\s*(?<field36>\S+)\s*(?<field37>\S+)\s*(?<field38>\S+)\s*(?<field39>\S+)\s*(?<field40>\S+)\s*(?<field41>\S+)\s*(?<field42>\S+)\s*(?<field43>\S+)\s*(?<field44>\S+)\s*(?<field45>\S+)\s*(?<field46>\S+)\s*(?<slowTransactions>\S+)\s*(?<transBetween0_50>\S+)\s*(?<transBetween51_100>\S+)\s*(?<transBetween101_200>\S+)\s*(?<transBetween201_300>\S+)\s*(?<transBetween301_500>\S+)\s*(?<transBetween501_1000>\S+)\s*(?<transBetween1001_2000>\S+)\s*(?<transBetween2001_3000>\S+)\s*(?<transGreaterThan3000>\S+)\s*(?<field57>\S+)\s*(?<field58>\S+)\s*(?<field59>\S+)\s*(?<field60>\S+)\s*(?<field61>\S+)\s*(?<field62>\S+)\s*(?<field63>\S+)\s*(?<field64>\S+)\s*(?<field65>\S+)\s*(?<field66>\S+)\s*(?<field67>\S+)\s*(?<field68>\S+)\s*
+
+
+[fast-wsgw-trans-ws]
+SHOULD_LINEMERGE=false
+TIME_FORMAT=%Y-%m-%d %H:%M:%S,%3N
+TIME_PREFIX=^
+MAX_TIMESTAMP_LOOKAHEAD=25
+LINE_BREAKER=([\r\n]+)\d{4}-\d{2}-\d{2}
+TRUNCATE=999999
+disabled = false
+pulldown_type = true
+
+[cshp-stats]
+SHOULD_LINEMERGE=false
+TIME_PREFIX=^
+TIME_FORMAT=%Y-%m-%d %H:%M:%S,%3N
+MAX_TIMESTAMP_LOOKAHEAD=25
+LINE_BREAKER=([\r\n]+)\d{4}-\d{2}-\d{2}
+TRUNCATE=999999
+EXTRACT-cshp-stats-validateClient = ^(?P<timeStamp>\d+\-\d+\-\d+\s+\d+:\d+:\d+,\d+)\s+(?P<appServerFiller>\[\[\w+\]\s+\w+:\s+'\d+'\s+\w+\s+\w+:\s+'\w+\.\w+\.\w+\s+\(\w+\-\w+\)'\])[^ \n]* (?P<application>\w+)\s+(?P<unknown1>\w+)\s+(?P<classMethod>\w+\.\w+)\s+\[\w+:(?P<clientId>\w+)[^:\n]*:(?P<methodName>\w+)[^:\n]*:(?P<elapsedTime>[^\]]+)[^\[\n]*\[\w+:(?P<highestSeverity>[^\]]+)\]\s+\[\w+:(?P<notsLine>[^\]]+)[^\[\n]*\[\w+:(?P<customerTransactionId>[^\]]+)[^\[\n]*\[\w+:(?P<internalTransactionId>[^\]]+)
+EXTRACT-csh-stats-serviceAccess = ^(?P<timeStamp>\d+\-\d+\-\d+\s+\d+:\d+:\d+,\d+)\s+(?P<appServerFiller>\[\[\w+\]\s+\w+:\s+'\d+'\s+\w+\s+\w+:\s+'\w+\.\w+\.\w+\s+\([a-z_-]+\)'\])\s+(?P<application>[^ ]+)\s+(?P<unknown1>[^ ]+)\s+(?P<classMethod>[^ ]+)\s+\[(?P<service>[^\]]+)[^\]\n]*\]\s+\[(?P<methodCalled>\w+)[^ \n]* \[(?P<elapsedTime>[^\]]+)[^ \n]* \[(?P<highestSeverity>\w+)[^ \n]* \[(?P<notsLine>\w+,\w+)[^\]\n]*\]\s+\[(?P<customerTransactionId>\w+)\]\s+\[(?P<internalTransactionId>[^\]]+)
+EXTRACT-cshp-stats-createOpenShipment = ^(?P<timeStamp>\d+\-\d+\-\d+\s+\d+:\d+:\d+,\d+)\s+(?P<appServerFiller>\[\[\w+\]\s+\w+:\s+'\d+'\s+\w+\s+\w+:\s+'\w+\.\w+\.\w+\s+\(\w+\-\w+\)'\])[^ \n]* (?P<application>[^ ]+)\s+(?P<unknown1>\w+)\s+(?P<classMethod>[^ ]+)\s+\[(?P<clientApp>[^\]]+)[^\[\n]*\[(?P<errContext>[a-z]+)\]\s+\[(?P<elapsedTime>[^\]]+)\]\s+\[(?P<accountNumber>\d+)[^\[\n]*\[(?P<meterNumber>\d+)\]\s+\[(?P<softwareId>\w+)\]\s+\[(?P<highestSeverity>\w+)\]\s+\[(?P<notsLine>\w+)\]\s+\[(?P<customerTransactionId>[^ ]+)\]\s+\[(?P<internalTransactionId>[^ ]+)\]\s+\[\]\s+\[(?P<index>[^ ]+)\]\s+\[(?P<masterTrackingNumber>[^ ]+)\]\s+\[(?P<pkgTrackingNumberList>[^ ]+)\]\s+\[(?P<originCountryCode>[^ ]+)\]\s+\[(?P<recipientCountryCode>[^ ]+)\]\s+\[(?P<seqNumber>[^ ]+)\]\s+\[(?P<pkgCount>[^ ]+)\]\s+\[(?P<serviceType>[^ ]+)\]\s+\[(?P<packagingType>[^ ]+)\]\s+\[(?P<totalNetCharge>[^ ]+)\]\s+\[(?P<action>[^ ]+)\]\s+\[(?P<jobId>[^ ]+)\]\s+\[(?P<uniqueUserIds>[^ ]+)\]
+EXTRACT-cshp-stats-shipDeleteShipment = ^(?P<timeStamp>\d+\-\d+\-\d+\s+\d+:\d+:\d+,\d+)\s+(?P<appServerFiller>\[\[\w+\]\s+\w+:\s+'\d+'\s+\w+\s+\w+:\s+'\w+\.\w+\.\w+\s+\(\w+\-\w+\)'\])[^ \n]* (?P<application>\w+)\s+(?P<unknown1>[^ ]+)\s+(?P<classMethod>[^ ]+)[^\[\n]*\[(?P<clientApp>[^\]]+)[^\]\n]*\]\s+\[(?P<errContext>\w+)\]\s+\[(?P<elapsedTime>[^\]]+)\]\s+\[(?P<accountNumber>[^\]]+)\]\s+\[(?P<meterNumber>\d+)\]\s+\[(?P<softwareId>\w+)[^ \n]* \[(?P<trackingNumber>\d+)[^ \n]* \[(?P<deletionControl>[^\]]+)[^ \n]* \[(?P<highestSeverity>\w+)[^ \n]* \[(?P<notsLine>[^\]]+)[^\]\n]*\]\s+\[(?P<customerTransactionId>\d+\w+)[^ \n]* \[(?P<internalTransactionId>[^\]]+)
+EXTRACT-cshp-stats-shipProcessShipment = ^(?P<timeStamp>\d+\-\d+\-\d+\s+\d+:\d+:\d+,\d+)\s+(?P<appServerFiller>\[\[\w+\]\s+\w+:\s+'\d+'\s+\w+\s+\w+:\s+'\w+\.\w+\.\w+\s+\([a-z_-]+\)'\])\s+(?P<application>\w+)\s+(?P<unknown1>\w+)\s+(?P<classMethod>Ship.processShipment)\s+\[(?P<clientApp>[a-z]+)[^ \n]* \[(?P<errContext>[a-z]+)[^ \n]* \[(?P<elapsedTime>[^\]]+)\]\s+\[(?P<accountNumber>[^ ]+)\]\s+\[(?P<meterNumber>[^ ]+)\]\s+\[(?P<softwareId>[^ ]+)\]\s+\[(?P<masterTrackingNumber>[^ ]+)\]\s+\[(?P<pkgTrackingNumberList>[^ ]+)\]\s+\[(?P<originCountryCode>[^ ]+)\]\s+\[(?P<recipientCountryCode>[^ ]+)\]\s+\[(?P<seqNumber>[^ ]+)\]\s+\[(?P<pkgCount>[^ ]+)\]\s+\[(?P<serviceType>[^ ]+)\]\s+\[(?P<packagingType>[^ ]+)\]\s+\[(?P<totalNetCharge>[^ ]+)\]\s+\[(?P<highestSeverity>[^ ]+)\]\s+\[(?P<notsLine>[^ ]+)\]\s+\[(?P<customerTransactionId>[^ ]+)\]\s+\[(?P<internalTransactionId>[^ ]+)\]
+EXTRACT-cshp-stats-cdusSendRequest = ^(?P<timeStamp>\d+\-\d+\-\d+\s+\d+:\d+:\d+,\d+)[^ \n]* (?P<appServerFiller>\[\[\w+\]\s+\w+:\s+'\d+'\s+\w+\s+\w+:\s+'\w+\.\w+\.\w+\s+\([a-z_-]+\)'\])\s+(?P<application>[^ ]+)\s+(?P<unknown1>[a-z]+)\s+(?P<classMethod>[^ ]+)\s+\[(?P<service>\w+)[^\[\n]*\[(?P<methodCalled>\w+)\]\s+\[(?P<elapsedTime>[^\]]+)[^\[\n]*\[(?P<highestSeverity>\w+)[^\[\n]*\[(?P<notsLine>[a-z]+\d+)\]\s+\[(?P<customerTransactionId>[^\]]+)[^ \n]* \[(?P<internalTransactionId>[^\]]+)
+
+
+[rating-rev-rate-quotes]
+SHOULD_LINEMERGE=false
+CHARSET=UTF-8
+LINE_BREAKER=([\r\n]+)\d+\s+\d+
+TRUNCATE=999999
+
+[oracle:metrics]
+SHOULD_LINEMERGE = false
+NO_BINARY_CHECK = true
+TIME_PREFIX = ""
+MAX_TIMESTAMP_LOOKAHEAD = 26
+TIME_FORMAT = %m-%d-%y %H:%M:%S
+REPORT-oracle_metrics_col_label = oracle_metrics_col_label
+EXTRACT-short_host = ^[^\)\n]*\)="(?P<short_host>\w+)
+REPORT-oracle_metrics_unclean = oracle_metrics_col_label_unclean
